@@ -31,29 +31,34 @@ sub make_map {
 
     my $build = MT::Builder->new;
     my $token = $build->compile( MT::Template::Context->new, $tmpl->text );
-    my $incs     = MT::Template::Tokens::getElementsByTagName($token, 'include')      || [];
-    my $incblock = MT::Template::Tokens::getElementsByTagName($token, 'includeBlock') || [];
-    my @incs = ( @$incs, @$incblock );
+    my @incs;
+    push @incs, @{ MT::Template::Tokens::getElementsByTagName($token, 'include')      || []};
+    push @incs, @{ MT::Template::Tokens::getElementsByTagName($token, 'includeBlock') || []};
+    push @incs, @{ MT::Template::Tokens::getElementsByTagName($token, 'widgetSet')    || []};
+    push @incs, @{ MT::Template::Tokens::getElementsByTagName($token, 'widgetManager')|| []};
+
     my $tmpl_blog_id = $tmpl->blog_id;
     my $map_class = MT->model('include_map');
     $map_class->remove({ template_id => $tmpl->id });
     for my $inc ( @incs ) {
         my $arg = $inc->[1]
             or next;
+
         my $name = $arg->{module}
                 || $arg->{widget}
-                || $arg->{identifier}
-                || $arg->{file}
+#                || $arg->{identifier}
+#                || $arg->{file}
+                || $arg->{name}
             or next;
         my $blog_id
             = $arg->{global}             ? 0
             : defined( $arg->{blog_id} ) ? $arg->{blog_id}
             :                              undef
             ;
-        next if $blog_id && $blog_id !~ /^\d+$/;
+        next if defined $blog_id && $blog_id !~ /^\d+$/;
         my $mod = MT->model('template')->load(
             { name => $name,
-              blog_id => defined $blog_id ? $blog_id : [ 0, $tmpl_blog_id ] },
+              blog_id => ( defined $blog_id ? $blog_id : [ 0, $tmpl_blog_id ] ) },
             { sort => 'blog_id',
               direction => 'descend',
         });

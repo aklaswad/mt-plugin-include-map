@@ -11,4 +11,16 @@ callbacks:
     cms_edit.template: $IncludeMap::IncludeMap::Plugin::cms_edit
     template_param.edit_template: $IncludeMap::IncludeMap::Plugin::add_widget
     *::post_create_default_templates: $IncludeMap::IncludeMap::Plugin::post_create_blog
-
+applications:
+    cms:
+        menus:
+            design:map:
+                order: 10000
+                label: Include Map
+                mode: include_map
+                view:
+                    - blog
+                    - website
+        methods:
+            include_map: $IncludeMap::IncludeMap::Plugin::include_map
+    

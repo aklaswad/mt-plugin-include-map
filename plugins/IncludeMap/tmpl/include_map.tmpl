@@ -1,0 +1,71 @@
+<mt:setvarblock name="page_title"><__trans phrase="Include Map"></mt:setvarblock>
+<mt:include name="include/header.tmpl">
+<mt:loop name="templates">
+    <div id="template-group-<mt:var name="__counter__">" class="template-group">
+    <mt:loop name="__value__">
+        <div id="tmpl-<mt:var name="id">" class="template" tmpl_id="<mt:var name="id">"><mt:var name="name"><mt:if name="other_blog">(<mt:var name="tmpl_blog_id" default="system">)</mt:if></div>
+    </mt:loop>
+    </div>
+</mt:loop>
+
+<style type="text/css">
+
+.template-group {
+    width: 300px;
+    float: left;
+}
+
+.template {
+    width: 200px;
+    height: 16px;
+    margin: 2px;
+    padding: 2px;
+    border: 1px solid #888;
+}
+
+.template:hover {
+    background: #bac;
+}
+
+.include {
+    background: #abc;
+}
+
+.include_by {
+    background: #cab;
+}
+
+</style>
+<script type="text/javascript">
+var include    = <mt:var name="include">;
+var include_by = <mt:var name="include_by">;
+
+function explorer( id, target, classMethod, className ) {
+    var ary = target[id];
+    if ( !ary ) return;
+    for ( var i=0; i < ary.length; i++ ) {
+        var inc_id = ary[i];
+        if ( classMethod == 'add' ) {
+            jQuery('#tmpl-' + inc_id).addClass(className);
+        }
+        else {
+            jQuery('#tmpl-' + inc_id).removeClass(className);
+        }
+        explorer( inc_id, target, classMethod, className );
+    }
+}
+
+jQuery('.template').mouseover( function(){
+    var id = jQuery(this).attr('tmpl_id');
+    explorer(id, include,    'add', 'include');
+    explorer(id, include_by, 'add', 'include_by' );
+});
+
+jQuery('.template').mouseout( function(){
+    var id = jQuery(this).attr('tmpl_id');
+    explorer(id, include,    'remove', 'include');
+    explorer(id, include_by, 'remove', 'include_by' );
+});
+
+</script>
+<mt:include name="include/footer.tmpl">
