@@ -1,0 +1,14 @@
+name: IncludeMap
+description: |
+    Display widget on template editing screen that contains including/included template list.
+version: 0.1
+author: Akira Sawada
+object_types:
+    include_map: 'MT::Template::IncludeMap'
+callbacks:
+    MT::Template::post_save: $IncludeMap::IncludeMap::Plugin::post_save
+    MT::Template::post_remove: $IncludeMap::IncludeMap::Plugin::post_remove
+    cms_edit.template: $IncludeMap::IncludeMap::Plugin::cms_edit
+    template_param.edit_template: $IncludeMap::IncludeMap::Plugin::add_widget
+
+
