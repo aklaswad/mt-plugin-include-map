@@ -50,7 +50,7 @@ sub make_map {
             : defined( $arg->{blog_id} ) ? $arg->{blog_id}
             :                              undef
             ;
-        next if $blog_id !~ /^\d+$/;
+        next if $blog_id && $blog_id !~ /^\d+$/;
         my $mod = MT->model('template')->load(
             { name => $name,
               blog_id => defined $blog_id ? $blog_id : [ 0, $tmpl_blog_id ] },

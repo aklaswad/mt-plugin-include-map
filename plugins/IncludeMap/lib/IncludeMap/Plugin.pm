@@ -6,13 +6,21 @@ sub post_save {
     my ( $cb, $obj ) = @_;
     MT->model('include_map')->make_map( $obj );
     1;
-
 }
 
 sub post_remove {
     my ( $cb, $obj ) = @_;
     MT->model('include_map')->remove_template( $obj );
     1;
+}
+
+sub post_create_blog {
+    my ( $cb, $blog ) = @_;
+    my $blog_id = $blog->id;
+    my @tmpls = MT->model('template')->load({ blog_id => $blog_id });
+    for my $tmpl ( @tmpls ) {
+        MT->model('include_map')->make_map($tmpl);
+    }
 }
 
 sub cms_edit {

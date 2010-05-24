@@ -10,5 +10,5 @@ callbacks:
     MT::Template::post_remove: $IncludeMap::IncludeMap::Plugin::post_remove
     cms_edit.template: $IncludeMap::IncludeMap::Plugin::cms_edit
     template_param.edit_template: $IncludeMap::IncludeMap::Plugin::add_widget
-
+    *::post_create_default_templates: $IncludeMap::IncludeMap::Plugin::post_create_blog
 
