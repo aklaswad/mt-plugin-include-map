@@ -1,5 +1,7 @@
 <mt:setvarblock name="page_title"><__trans phrase="Include Map"></mt:setvarblock>
 <mt:include name="include/header.tmpl">
+<div id="map-wrapper">
+<canvas id="draw-canvas" width="1000" height="600"></canvas>
 <mt:loop name="templates">
     <div id="template-group-<mt:var name="__counter__">" class="template-group">
     <mt:loop name="__value__">
@@ -7,19 +9,32 @@
     </mt:loop>
     </div>
 </mt:loop>
-
+</div>
 <style type="text/css">
 
+#map-wrapper {
+    width: 1000px;
+    height: 600px;
+    position: relative;
+}
+
+#draw-canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
 .template-group {
-    width: 170px;
+    width: 180px;
     height: 600px;
     float: left;
 }
 
 .template {
+    position: relative;
     width: 140px;
     height: 16px;
-    margin: 2px;
+    margin: 2px 2px 2px 0;
     padding: 2px;
     overflow: hidden;
     font-size: 0.85em;
@@ -60,6 +75,7 @@ function explorer( id, target, classMethod, className ) {
         var inc_id = ary[i];
         if ( classMethod == 'add' ) {
             jQuery('#tmpl-' + inc_id).addClass(className);
+            drawLine(id, inc_id, className);
         }
         else {
             jQuery('#tmpl-' + inc_id).removeClass(className);
@@ -78,7 +94,40 @@ jQuery('.template').mouseout( function(){
     var id = jQuery(this).attr('tmpl_id');
     explorer(id, include,    'remove', 'include');
     explorer(id, include_by, 'remove', 'include_by' );
+    clearCanvas();
 });
+
+function drawLine ( from_id, to_id, className ) {
+    var canvas = document.getElementById('draw-canvas');
+    if ( ! canvas || ! canvas.getContext ) {
+      return false;
+    }
+    var ctx = canvas.getContext('2d');
+    var c = jQuery('#draw-canvas').offset();
+    var from = jQuery('#tmpl-' + from_id);
+    var to   = jQuery('#tmpl-' + to_id  );
+    ctx.beginPath();
+    if ( className == 'include' ) {
+        ctx.strokeStyle = '#778899';
+        ctx.moveTo(6 + from.offset().left + from.width() - c.left, 10 + from.offset().top - c.top);
+        ctx.lineTo(0 + to.offset().left - c.left,                  10 + to.offset().top - c.top);
+    }
+    else {
+        ctx.strokeStyle = '#998877';
+        ctx.moveTo(0 + from.offset().left - c.left,            10 + from.offset().top - c.top);
+        ctx.lineTo(6 + to.offset().left + to.width() - c.left, 10 + to.offset().top - c.top);
+    }
+    ctx.stroke();
+}
+
+function clearCanvas() {
+    var canvas = document.getElementById('draw-canvas');
+    if ( ! canvas || ! canvas.getContext ) {
+      return false;
+    }
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 
 </script>
 <mt:include name="include/footer.tmpl">
