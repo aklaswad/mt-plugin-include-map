@@ -81,15 +81,15 @@ sub include_map {
     my %templates;
     my @templates = MT->model('template')->load({ type => { not => 'backup' }, blog_id => $blog_id });
 
-    for my $template ( @templates ) {
-        $templates{$template->id} = {
-            id           => $template->id,
-            tmpl_blog_id => $template->blog_id,
-            name         => $template->name,
-            other_blog   => 0,
-            depth        => 0,
-        }
-    }
+#    for my $template ( @templates ) {
+#        $templates{$template->id} = {
+#            id           => $template->id,
+#            tmpl_blog_id => $template->blog_id,
+#            name         => $template->name,
+#            other_blog   => 0,
+#            depth        => 0,
+#        }
+#    }
 
     my @maps = MT->model('include_map')->load([
         { template_blog_id => $blog_id },
@@ -148,6 +148,19 @@ sub include_map {
         push @{ @depth[$tmpl->{depth}] }, $tmpl;
     }
 
+    my %order_in_group;
+    for my $group ( @depth ) {
+        $group = [
+            sort {
+                ( $include_by{ $a->{id} } ? $order_in_group{ $include_by{ $a->{id} }->[0] } : $a->{id} )
+                    <=> ( $include_by{ $b->{id} } ? $order_in_group{ $include_by{ $b->{id} }->[0] } : $b->{id} )
+                || scalar @{ $include{ $b->{id} } || [] } <=> scalar @{ $include{ $a->{id} } || [] }
+            } @$group ];
+        my $i;
+        for my $tmpl ( @$group ) {
+            $order_in_group{ $tmpl->{id} } = $i++;
+        }
+    }
     my %param;
     $param{maps} = \@maps;
     $param{templates} = \@depth;
