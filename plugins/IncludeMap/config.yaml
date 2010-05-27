@@ -2,6 +2,7 @@ name: IncludeMap
 description: |
     Display widget on template editing screen that contains including/included template list.
 version: 0.1
+schema_version: 0.1
 author: Akira Sawada
 object_types:
     include_map: 'MT::Template::IncludeMap'

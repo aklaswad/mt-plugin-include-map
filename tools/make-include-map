@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use lib qw( lib extlib ../lib ../extlib );
 use MT;
-use MT::Template::IncludeMap;
 MT->new;
 my @tmpls = MT->model('template')->load({
     type => { not => 'backup' }
