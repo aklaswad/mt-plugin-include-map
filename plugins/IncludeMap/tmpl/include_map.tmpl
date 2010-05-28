@@ -5,7 +5,11 @@
 <mt:loop name="templates">
     <div id="template-group-<mt:var name="__counter__">" class="template-group">
     <mt:loop name="__value__">
-        <div id="tmpl-<mt:var name="id">" class="template" tmpl_id="<mt:var name="id">"><mt:var name="name"><mt:if name="other_blog">(<mt:var name="tmpl_blog_id" default="system">)</mt:if></div>
+        <div id="tmpl-<mt:var name="id">" class="template" tmpl_id="<mt:var name="id">">
+            <a href="<mt:var name="script_url">?__mode=view&amp;_type=template&amp;blog_id=<mt:var name="tmpl_blog_id">&amp;id=<mt:var name="id">">
+                <mt:var name="name"><mt:if name="other_blog">(<mt:var name="tmpl_blog_id" default="system">)</mt:if>
+            </a>
+        </div>
     </mt:loop>
     </div>
 </mt:loop>
