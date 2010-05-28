@@ -6,8 +6,9 @@
     <div id="template-group-<mt:var name="__counter__">" class="template-group">
     <mt:loop name="__value__">
         <div id="tmpl-<mt:var name="id">" class="template" tmpl_id="<mt:var name="id">">
-            <a href="<mt:var name="script_url">?__mode=view&amp;_type=template&amp;blog_id=<mt:var name="tmpl_blog_id">&amp;id=<mt:var name="id">">
-                <mt:var name="name"><mt:if name="other_blog">(<mt:var name="tmpl_blog_id" default="system">)</mt:if>
+            <mt:var name="name"><mt:if name="other_blog">(<mt:var name="tmpl_blog_id" default="system">)</mt:if>
+            <a class="edit-link" href="<mt:var name="script_url">?__mode=view&amp;_type=template&amp;blog_id=<mt:var name="tmpl_blog_id">&amp;id=<mt:var name="id">">
+                [edit]
             </a>
         </div>
     </mt:loop>
@@ -42,7 +43,6 @@
     padding: 2px;
     overflow: hidden;
     font-size: 0.85em;
-
     border: 1px solid #bbb;
     color: #bbb;
 }
@@ -52,6 +52,23 @@
     color: #213;
     background: #bac;
     cursor: normal;
+}
+
+.edit-link {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1000;
+    background: #bac;
+    padding: 3px;
+}
+
+.template .edit-link {
+    display: none;
+}
+
+.template:hover .edit-link {
+    display: block;
 }
 
 .include {
