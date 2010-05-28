@@ -34,6 +34,7 @@ sub add_widget {
     my @includings = MT->model('include_map')->load({
         module_id => $obj->id,
     });
+    my $blog_id = $app->param('blog_id');
     if ( scalar @includings ) {
         $param->{including_loop} = [ map {
             {
@@ -46,6 +47,8 @@ sub add_widget {
                         id => $_->template_id
                     }
                 ),
+                including_blog_id  => $_->template_blog_id,
+                including_by_other => ( $_->template_blog_id != $blog_id ),
             }} @includings ];
         $param->{have_includings} = 1;
     }
@@ -56,7 +59,7 @@ sub add_widget {
     label="<__trans phrase="Included by">">
     <ul>
         <mt:loop name="including_loop">
-        <li><a href="<mt:var name="including_link">" class="icon-left icon-related"><mt:var name="including_name"></a></li>
+        <li><a href="<mt:var name="including_link">" class="icon-left icon-related"><mt:var name="including_name"><mt:if name="including_by_other">(<mt:var name="including_blog_id" default="system">)</mt:if></a></li>
         </mt:loop>
     </ul>
 </mtapp:widget>
