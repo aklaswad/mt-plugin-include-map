@@ -88,9 +88,10 @@
 var include    = <mt:var name="include">;
 var include_by = <mt:var name="include_by">;
 
-function explorer( id, target, classMethod, className ) {
+function explorer( id, target, classMethod, className, path ) {
     var ary = target[id];
     if ( !ary ) return;
+    path[id] = 1;
     for ( var i=0; i < ary.length; i++ ) {
         var inc_id = ary[i];
         if ( classMethod == 'add' ) {
@@ -100,20 +101,22 @@ function explorer( id, target, classMethod, className ) {
         else {
             jQuery('#tmpl-' + inc_id).removeClass(className);
         }
-        explorer( inc_id, target, classMethod, className );
+        if ( !(path[inc_id]) )
+            explorer( inc_id, target, classMethod, className, path );
     }
+    path[id] = 0;
 }
 
 jQuery('.template').mouseover( function(){
     var id = jQuery(this).attr('tmpl_id');
-    explorer(id, include,    'add', 'include');
-    explorer(id, include_by, 'add', 'include_by' );
+    explorer(id, include,    'add', 'include', {} );
+    explorer(id, include_by, 'add', 'include_by', {} );
 });
 
 jQuery('.template').mouseout( function(){
     var id = jQuery(this).attr('tmpl_id');
-    explorer(id, include,    'remove', 'include');
-    explorer(id, include_by, 'remove', 'include_by' );
+    explorer(id, include,    'remove', 'include', {} );
+    explorer(id, include_by, 'remove', 'include_by', {} );
     clearCanvas();
 });
 
