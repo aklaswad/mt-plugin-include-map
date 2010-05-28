@@ -13,6 +13,7 @@ __PACKAGE__->install_properties({
         'module_id'        => 'integer',
         'module_name'      => 'string(255)',
         'module_blog_id'   => 'integer',
+        'module_type'      => 'string(255)',
 
     },
     datasource  => 'include_map',
@@ -50,6 +51,10 @@ sub make_map {
 #                || $arg->{file}
                 || $arg->{name}
             or next;
+        my $type = $arg->{module} ? 'module'
+                 : $arg->{widget} ? 'widget'
+                 :                  'module'
+                 ;
         my $blog_id
             = $arg->{global}             ? 0
             : defined( $arg->{blog_id} ) ? $arg->{blog_id}
@@ -68,8 +73,9 @@ sub make_map {
             template_name    => $tmpl->name,
             template_blog_id => $tmpl->blog_id,
             module_id        => $mod ? $mod->id      : 0,
-            module_name      => $mod ? $mod->name    : 0,
-            module_blog_id   => $mod ? $mod->blog_id : 0,
+            module_name      => $mod ? $mod->name    : $name,
+            module_blog_id   => $mod ? $mod->blog_id : $tmpl->blog_id,
+            module_type      => $mod ? $mod->type    : $type,
         });
         $map->save or die $map->errstr;
     }
