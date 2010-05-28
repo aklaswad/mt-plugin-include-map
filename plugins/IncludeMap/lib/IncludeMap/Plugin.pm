@@ -105,7 +105,7 @@ sub include_map {
                 id           => $map->template_id,
                 tmpl_blog_id => $map->template_blog_id,
                 name         => $map->template_name,
-                type         => $map->module_type,
+                type         => $map->template_type,
                 other_blog   => ($map->template_blog_id != $blog_id),
                 depth        => 0,
             }
