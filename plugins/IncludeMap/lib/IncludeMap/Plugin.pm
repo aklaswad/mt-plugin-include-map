@@ -25,12 +25,13 @@ sub post_create_blog {
 
 sub cms_edit {
     my ( $cb, $app, $id, $obj, $param ) = @_;
-    $app->{__edit_object} = $obj;
+    $app->{__edit_object} = $obj if $obj && $obj->id;
+    1;
 }
 
 sub add_widget {
     my ( $cb, $app, $param, $tmpl ) = @_;
-    my $obj = $app->{__edit_object};
+    my $obj = $app->{__edit_object} or return 1;
     my @includings = MT->model('include_map')->load({
         module_id => $obj->id,
     });
