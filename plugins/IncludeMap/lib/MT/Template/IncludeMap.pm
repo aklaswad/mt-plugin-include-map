@@ -69,7 +69,7 @@ sub make_map {
             template_blog_id => $tmpl->blog_id,
             module_id        => $mod ? $mod->id      : 0,
             module_name      => $mod ? $mod->name    : 0,
-            modlue_blog_id   => $mod ? $mod->blog_id : 0,
+            module_blog_id   => $mod ? $mod->blog_id : 0,
         });
         $map->save or die $map->errstr;
     }
