@@ -7,10 +7,10 @@ author: Akira Sawada
 object_types:
     include_map: 'MT::Template::IncludeMap'
 callbacks:
-    MT::Template::post_save: $IncludeMap::IncludeMap::Plugin::post_save
-    MT::Template::post_remove: $IncludeMap::IncludeMap::Plugin::post_remove
-    cms_edit.template: $IncludeMap::IncludeMap::Plugin::cms_edit
-    template_param.edit_template: $IncludeMap::IncludeMap::Plugin::add_widget
+    MT::Template::post_save:          $IncludeMap::IncludeMap::Plugin::post_save
+    MT::Template::post_remove:        $IncludeMap::IncludeMap::Plugin::post_remove
+    cms_edit.template:                $IncludeMap::IncludeMap::Plugin::cms_edit
+    template_param.edit_template:     $IncludeMap::IncludeMap::Plugin::add_widget
     *::post_create_default_templates: $IncludeMap::IncludeMap::Plugin::post_create_blog
 applications:
     cms:
@@ -24,4 +24,16 @@ applications:
                     - website
         methods:
             include_map: $IncludeMap::IncludeMap::Plugin::include_map
-    
+        list_actions:
+            blog:
+                rebuild_include_map:
+                    label: Rebuild Include Map
+                    order: 10000
+                    code: $IncludeMap::IncludeMap::Plugin::rebuild_map
+                    permit_action: rebuild_include_map
+            website:
+                rebuild_include_map:
+                    label: Rebuild Include Map
+                    order: 10000
+                    code: $IncludeMap::IncludeMap::Plugin::rebuild_map
+                    permit_action: rebuild_include_map 

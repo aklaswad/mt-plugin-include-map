@@ -172,4 +172,25 @@ sub include_map {
     $app->load_tmpl( 'include_map.tmpl', \%param );
 }
 
+sub rebuild_map {
+    my $app = shift;
+    my $q = $app->param;
+    my @ids = $q->param('id');
+    if ( $q->param('_type') eq 'website' ) {
+        my @blogs = MT->model('blog')->load(
+            { parent_id => \@ids, },
+            { fetchonly => { id => 1 } },
+        );
+        @ids = ( @ids, map { $_->id } @blogs );
+    }
+    my @tmpls = MT->model('template')->load({
+        type    => { not => 'backup' },
+        blog_id => \@ids,
+    });
+    for my $tmpl ( @tmpls ) {
+        MT->model('include_map')->make_map($tmpl);
+    }
+    $app->call_return;
+}
+
 1;
