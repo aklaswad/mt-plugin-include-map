@@ -25,7 +25,7 @@ sub class_label {
 
 sub make_map {
     my $pkg = shift;
-    my ( $tmpl ) = @_;
+    my ( $tmpl, %opts ) = @_;
     require MT::Builder;
     require MT::Template::Context;
     my $build = MT::Builder->new;
@@ -38,7 +38,7 @@ sub make_map {
 
     my $tmpl_blog_id = $tmpl->blog_id;
     my $map_class = MT->model('include_map');
-    $map_class->remove({ template_id => $tmpl->id });
+    $map_class->remove({ template_id => $tmpl->id }) unless $opts{no_remove};
     for my $inc ( @incs ) {
         my $arg = $inc->[1]
             or next;
@@ -84,7 +84,7 @@ sub remove_template {
     my $pkg = shift;
     my ( $mod ) = @_;
     $mod = $mod->id if ref $mod;
-    MT->model('include_map')->remove({ temlate_id => $mod->id });
+    MT->model('include_map')->remove({ template_id => $mod->id });
     my @maps = MT->model('include_map')->load({
         module_id => $mod,
     });

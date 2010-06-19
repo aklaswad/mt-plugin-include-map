@@ -9,6 +9,7 @@ object_types:
 callbacks:
     MT::Template::post_save:          $IncludeMap::IncludeMap::Plugin::post_save
     MT::Template::post_remove:        $IncludeMap::IncludeMap::Plugin::post_remove
+    post_apply_theme:                 $IncludeMap::IncludeMap::Plugin::post_apply_theme
     cms_edit.template:                $IncludeMap::IncludeMap::Plugin::cms_edit
     template_param.edit_template:     $IncludeMap::IncludeMap::Plugin::add_widget
     *::post_create_default_templates: $IncludeMap::IncludeMap::Plugin::post_create_blog
@@ -24,6 +25,8 @@ applications:
                     - website
         methods:
             include_map: $IncludeMap::IncludeMap::Plugin::include_map
+            rebuild_map: $IncludeMap::IncludeMap::Plugin::rebuild_map
+
         list_actions:
             blog:
                 rebuild_include_map:

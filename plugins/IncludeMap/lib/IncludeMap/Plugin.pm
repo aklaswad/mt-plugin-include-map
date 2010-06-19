@@ -2,6 +2,7 @@ package IncludeMap::Plugin;
 use strict;
 use warnings;
 use JSON;
+
 sub post_save {
     my ( $cb, $obj ) = @_;
     MT->model('include_map')->make_map( $obj );
@@ -17,16 +18,18 @@ sub post_remove {
 sub post_create_blog {
     my ( $cb, $blog ) = @_;
     my $blog_id = $blog->id;
-    my @tmpls = MT->model('template')->load({ blog_id => $blog_id });
-    for my $tmpl ( @tmpls ) {
-        MT->model('include_map')->make_map($tmpl);
-    }
+    _rebuild_maps( $blog_id );
 }
 
 sub cms_edit {
     my ( $cb, $app, $id, $obj, $param ) = @_;
     $app->{__edit_object} = $obj if $obj && $obj->id;
     1;
+}
+
+sub post_apply_theme {
+    my ( $cb, $blog ) = @_;
+    _rebuild_maps( $blog->id );
 }
 
 sub add_widget {
@@ -185,14 +188,32 @@ sub rebuild_map {
         );
         @ids = ( @ids, map { $_->id } @blogs );
     }
+    _rebuild_maps( @ids );
+    return $q->param('go_map') ? $app->redirect(
+                                     $app->uri(
+                                         mode => 'include_map',
+                                         args => { blog_id => $ids[0] },
+                                 ))
+                               : $app->call_return;
+}
+
+sub _rebuild_maps {
+    my ( @ids ) = @_;
+
+    MT->model('include_map')->remove({
+        module_blog_id => \@ids,
+    });
+    MT->model('include_map')->remove({
+        template_blog_id => \@ids,
+    });
     my @tmpls = MT->model('template')->load({
         type    => { not => 'backup' },
         blog_id => \@ids,
     });
     for my $tmpl ( @tmpls ) {
-        MT->model('include_map')->make_map($tmpl);
+        MT->model('include_map')->make_map($tmpl, no_remove => 1 );
     }
-    $app->call_return;
+    return 1;
 }
 
 1;

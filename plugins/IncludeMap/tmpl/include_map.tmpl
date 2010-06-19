@@ -1,4 +1,7 @@
 <mt:setvarblock name="page_title"><__trans phrase="Include Map"></mt:setvarblock>
+<mt:setvarblock name="content_header">
+    <p id="create-new-link"><a href="<mt:var name="script_url">?__mode=rebuild_map&amp;_type=<mt:if name="is_blog">blog<mt:else>website</mt:if>&amp;id=<mt:var name="blog_id">&amp;go_map=1" class="icon-create icon-left">rebuild map</a></p>
+</mt:setvarblock>
 <mt:include name="include/header.tmpl">
 <div id="map-wrapper">
 <canvas id="draw-canvas" width="1000" height="600"></canvas>
