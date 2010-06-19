@@ -116,6 +116,7 @@ sub include_map {
                 name         => $map->module_name,
                 other_blog   => ($map->module_blog_id != $blog_id),
                 depth        => 0,
+                search       => ($map->module_blog_id == -1 ),
             }
         }
     }

@@ -6,10 +6,16 @@
     <div id="template-group-<mt:var name="__counter__">" class="template-group">
     <mt:loop name="__value__">
         <div id="tmpl-<mt:var name="id">" class="template" tmpl_id="<mt:var name="id">">
-            <mt:var name="name"><mt:if name="other_blog">(<mt:var name="tmpl_blog_id" default="system">)</mt:if>
-            <a class="edit-link" href="<mt:var name="script_url">?__mode=view&amp;_type=template&amp;blog_id=<mt:var name="tmpl_blog_id">&amp;id=<mt:var name="id">">
-                [edit]
-            </a>
+            <mt:var name="name"><mt:if name="other_blog">(<mt:if name="tmpl_blog_id" eq="-1">?<mt:else><mt:var name="tmpl_blog_id" default="system"></mt:if>)</mt:if>
+            <mt:if name="search">
+                <a class="edit-link" href="<mt:var name="script_url">?__mode=search_replace&amp;_type=template&amp;blog_id=0&amp;search=<mt:var name="name">&amp;is_limited=1&amp;search_cols=name&amp;do_search=1">
+                    [search]
+                </a>
+            <mt:else>
+                <a class="edit-link" href="<mt:var name="script_url">?__mode=view&amp;_type=template&amp;blog_id=<mt:var name="tmpl_blog_id">&amp;id=<mt:var name="id">">
+                    [edit]
+                </a>
+            </mt:if>
         </div>
     </mt:loop>
     </div>

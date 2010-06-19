@@ -28,7 +28,6 @@ sub make_map {
     my ( $tmpl ) = @_;
     require MT::Builder;
     require MT::Template::Context;
-
     my $build = MT::Builder->new;
     my $token = $build->compile( MT::Template::Context->new, $tmpl->text );
     my @incs;
@@ -55,21 +54,26 @@ sub make_map {
             : defined( $arg->{blog_id} ) ? $arg->{blog_id}
             :                              undef
             ;
-        next if defined $blog_id && $blog_id !~ /^\d+$/;
-        my $mod = MT->model('template')->load(
-            { name => $name,
-              blog_id => ( defined $blog_id ? $blog_id : [ 0, $tmpl_blog_id ] ) },
-            { sort => 'blog_id',
-              direction => 'descend',
-        });
+        my $mod;
+        if ( defined $blog_id && $blog_id !~ /^\d+$/ ) {
+            $blog_id = -1
+        }
+        else {
+            $mod = MT->model('template')->load(
+                { name => $name,
+                  blog_id => ( defined $blog_id ? $blog_id : [ 0, $tmpl_blog_id ] ) },
+                { sort => 'blog_id',
+                  direction => 'descend',
+            });
+        }
         my $map = $map_class->new;
         $map->set_values({
             template_id      => $tmpl->id,
             template_name    => $tmpl->name,
             template_blog_id => $tmpl->blog_id,
             module_id        => $mod ? $mod->id      : 0,
-            module_name      => $mod ? $mod->name    : 0,
-            module_blog_id   => $mod ? $mod->blog_id : 0,
+            module_name      => $mod ? $mod->name    : $name,
+            module_blog_id   => $mod ? $mod->blog_id : $blog_id,
         });
         $map->save or die $map->errstr;
     }
