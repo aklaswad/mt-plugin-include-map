@@ -84,7 +84,7 @@ sub remove_template {
     my $pkg = shift;
     my ( $mod ) = @_;
     $mod = $mod->id if ref $mod;
-    MT->model('include_map')->remove({ template_id => $mod->id });
+    MT->model('include_map')->remove({ template_id => $mod });
     my @maps = MT->model('include_map')->load({
         module_id => $mod,
     });
